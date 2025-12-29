@@ -2,6 +2,13 @@
 Production-Ready Job Automation using n8n, RAG & LLMs
 📌 Overview
 
+<<<<<<< Updated upstream
+=======
+🚀 AI-Assisted Auto Job Applier
+Production-Ready Job Automation using n8n, RAG & LLMs
+📌 Overview
+
+>>>>>>> Stashed changes
 AI-Assisted Auto Job Applier automates job discovery, intelligent matching, and controlled job applications using n8n workflows, RAG, and LLMs.
 It is built with a production mindset—ethical automation, transparency, and scalability.
 
@@ -60,4 +67,8 @@ cd AutoJobApplier
 Kalpesh Sanasne
 Android • Full-Stack • GenAI Developer
 
+<<<<<<< Updated upstream
 ⭐ Built as a real-world, production-ready AI automation system — not a demo.
+=======
+⭐ Built as a real-world, production-ready AI automation system — not a demo.
+>>>>>>> Stashed changes
