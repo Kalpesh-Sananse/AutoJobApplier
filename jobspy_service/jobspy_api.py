@@ -23,6 +23,7 @@ def get_jobs(
     )
 
     # 🔴 IMPORTANT FIX: Replace NaN with None
+    # to run the api - uvicorn jobspy_api:app --reload --port 8000
     jobs_df = jobs_df.where(pd.notnull(jobs_df), None)
 
     return jobs_df.to_dict(orient="records")
