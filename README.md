@@ -1,6 +1,4 @@
-🚀 AI-Assisted Auto Job Applier
-Production-Ready Job Automation using n8n, RAG & LLMs
-📌 Overview
+
 
 🚀 AI-Assisted Auto Job Applier
 Production-Ready Job Automation using n8n, RAG & LLMs
