@@ -1,0 +1,98 @@
+{
+    "name": "JobSpy Job Ingestion (Background) - FIXED OUTPUT",
+    "nodes": [
+      {
+        "parameters": {
+          "triggerTimes": {
+            "item": [
+              {
+                "mode": "everyX",
+                "value": 6,
+                "unit": "hours"
+              }
+            ]
+          }
+        },
+        "name": "Cron Trigger",
+        "type": "n8n-nodes-base.cron",
+        "typeVersion": 1,
+        "position": [200, 300]
+      },
+      {
+        "parameters": {
+          "method": "GET",
+          "url": "https://vernia-unbeguiling-illogically.ngrok-free.dev/jobs",
+          "responseFormat": "json",
+          "options": {
+            "timeout": 300000,
+            "ignoreSslIssues": true
+          },
+          "queryParametersUi": {
+            "parameter": [
+              { "name": "role", "value": "Android Developer" },
+              { "name": "location", "value": "India" },
+              { "name": "limit", "value": "10" }
+            ]
+          }
+        },
+        "name": "Fetch Jobs (JobSpy API)",
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 2,
+        "position": [450, 300]
+      },
+      {
+        "parameters": {
+          "fieldToSplitOut": "={{$json}}"
+        },
+        "name": "Split Jobs Into Items",
+        "type": "n8n-nodes-base.itemLists",
+        "typeVersion": 1,
+        "position": [700, 300]
+      },
+      {
+        "parameters": {
+          "batchSize": 1
+        },
+        "name": "Process One Job",
+        "type": "n8n-nodes-base.splitInBatches",
+        "typeVersion": 1,
+        "position": [950, 300]
+      }
+    ],
+    "connections": {
+      "Cron Trigger": {
+        "main": [
+          [
+            {
+              "node": "Fetch Jobs (JobSpy API)",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Fetch Jobs (JobSpy API)": {
+        "main": [
+          [
+            {
+              "node": "Split Jobs Into Items",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Split Jobs Into Items": {
+        "main": [
+          [
+            {
+              "node": "Process One Job",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    }
+  }
+  
