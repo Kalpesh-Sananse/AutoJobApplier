@@ -1,0 +1,24 @@
+
+# LinkedIn Job Search Configuration
+
+search_parameters:
+  keywords: "Software Engineer"
+  location: "United States"
+  remote: true
+  easy_apply: true
+
+# Application Limits
+limit:
+  daily_applications: 20  # Maximum number of applications per run
+
+# Screenshot settings for debugging and memory optimization
+screenshots:
+  enabled: true              # Set to false to disable all screenshots
+  save_on_success: false     # Don't save screenshots for successful applications
+  save_on_error: true        # Always save screenshots when errors occur
+  save_final_only: true      # Only save screenshot at submit
+
+# Run Settings
+settings:
+  run_in_background: false # Browser will be visible (IMPORTANT: Don't close it during verification!)
+  log_level: "INFO"

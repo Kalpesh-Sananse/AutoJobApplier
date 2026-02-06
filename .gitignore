@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# LinkedIn Bot Specific
+# CRITICAL: Never commit these files!
+agent/secrets.yaml
+browser_session.json
+*.png
+job_*.png
+*_error_*.png
+*FINAL*.png
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# PowerPoint and temporary files
+*.pptx
+~$*.pptx
+*.tmp
+
+# PDF resume (personal info)
+dummy_resume.pdf
+
+# Keep example files
+!secrets.yaml.example
+!config.yaml.example
