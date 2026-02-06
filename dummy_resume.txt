@@ -1,0 +1,68 @@
+ALEX DANNY
+Software Engineer
+
+CONTACT INFORMATION
+Email: alex.danny@email.com
+Phone: +1 (555) 123-4567
+Mobile: 5551234567
+Location: New York, NY
+City: New York
+State: New York
+Country: United States
+LinkedIn: linkedin.com/in/alexdanny
+
+PROFESSIONAL SUMMARY
+Experienced Software Engineer with 5+ years of expertise in full-stack development, Python, JavaScript, and cloud technologies. Proven track record of building scalable applications and leading technical projects.
+
+WORK EXPERIENCE
+
+Senior Software Engineer | Tech Corp | New York, NY
+January 2020 - Present
+- Led development of microservices architecture serving 1M+ users
+- Built RESTful APIs using Python (Django, Flask) and Node.js
+- Implemented CI/CD pipelines reducing deployment time by 60%
+- Mentored team of 5 junior developers
+
+Software Engineer | Innovation Labs | San Francisco, CA
+June 2018 - December 2019
+- Developed web applications using React, TypeScript, and Redux
+- Optimized database queries improving performance by 40%
+- Collaborated with cross-functional teams in Agile environment
+
+EDUCATION
+
+Bachelor of Science in Computer Science
+University of California, Berkeley | 2014 - 2018
+GPA: 3.8/4.0
+
+TECHNICAL SKILLS
+- Languages: Python, JavaScript, TypeScript, Java, C++, SQL
+- Frameworks: React, Node.js, Django, Flask, Express.js
+- Databases: PostgreSQL, MongoDB, Redis, MySQL
+- Cloud: AWS (EC2, S3, Lambda), Google Cloud Platform, Azure
+- Tools: Docker, Kubernetes, Git, Jenkins, Terraform
+- Other: RESTful APIs, Microservices, Agile/Scrum, TDD
+
+YEARS OF EXPERIENCE
+Total Experience: 5 years
+Python Experience: 5 years
+JavaScript Experience: 4 years
+Leadership Experience: 2 years
+
+CERTIFICATIONS
+- AWS Certified Solutions Architect
+- Google Cloud Professional Developer
+
+AVAILABILITY
+Notice Period: 2 weeks
+Willing to Relocate: Yes
+Authorized to Work in US: Yes
+
+SALARY EXPECTATIONS
+Current Salary: $120,000
+Expected Salary: $140,000
+
+ADDITIONAL INFORMATION
+Visa Status: US Citizen
+Security Clearance: None
+References: Available upon request

@@ -1,0 +1,22 @@
+
+Alex Danny
+Software Engineer
+Email: alexdanny006@gmail.com
+
+Summary:
+Experienced Software Engineer with 5 years of experience in Python, JavaScript, and Web Development. Skilled in building scalable applications and automating workflows.
+
+Skills:
+- Languages: Python, JavaScript, TypeScript, HTML, CSS, SQL
+- Frameworks: React, Node.js, Django, Flask, Selenium
+- Tools: Git, Docker, Kubernetes, AWS, Jenkins
+- AI: OpenAI API, Ollama, LLMs
+
+Experience:
+Software Engineer | Tech Corp | 2020 - Present
+- Developed and maintained web applications using React and Node.js.
+- Implemented automated testing pipelines using Selenium and PyTest.
+- Integrated AI features using LLMs to improve user engagement.
+
+Education:
+Bachelor of Science in Computer Science | University of Tech | 2016 - 2020
