@@ -1,5 +1,6 @@
 # LinkedIn Auto Job Applier - Production AI Agent
 
+
 <div align="center">
 
 ![Python](https://img.shields.io/badge/Python-3.14-blue.svg)
