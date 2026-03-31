@@ -17,6 +17,9 @@ venv/
 env/
 ENV/
 
+# Node
+node_modules/
+
 # IDE
 .vscode/
 .idea/
@@ -47,6 +50,12 @@ Thumbs.db
 
 # PDF resume (personal info)
 dummy_resume.pdf
+
+# Generated/unnecessary directories
+AutoJobApplier/
+chrome_profile/
+test_ui/
+diagrams/
 
 # Keep example files
 !secrets.yaml.example

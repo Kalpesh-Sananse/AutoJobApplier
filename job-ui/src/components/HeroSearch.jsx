@@ -1,27 +1,26 @@
-export default function SearchBar({
-    role,
-    setRole,
-    country,
-    setCountry,
-    limit,
-    setLimit,
-    countries,
-    onSearch,
-    loading
-  }) {
-    return (
-      <div className="bg-white rounded-2xl shadow-lg p-6 sticky top-6 z-20">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-  
+export default function HeroSearch({
+  role, setRole, country, setCountry, limit, setLimit, countries, onSearch, loading
+}) {
+  return (
+    <div className="glass-card gradient-border p-5">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
+        {/* Job Title */}
+        <div className="md:col-span-5">
+          <label className="text-xs text-slate-500 font-medium uppercase tracking-wider mb-1.5 block">Job Title</label>
           <input
-            className="border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
-            placeholder="Job title (e.g. Junior Developer)"
+            className="input-glass"
+            placeholder="e.g. Software Engineer, Data Scientist"
             value={role}
             onChange={(e) => setRole(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && onSearch()}
           />
-  
+        </div>
+
+        {/* Country */}
+        <div className="md:col-span-3">
+          <label className="text-xs text-slate-500 font-medium uppercase tracking-wider mb-1.5 block">Location</label>
           <select
-            className="border border-gray-300 rounded-lg px-4 py-3"
+            className="select-glass w-full"
             value={country}
             onChange={(e) => setCountry(e.target.value)}
           >
@@ -29,9 +28,13 @@ export default function SearchBar({
               <option key={c}>{c}</option>
             ))}
           </select>
-  
+        </div>
+
+        {/* Limit */}
+        <div className="md:col-span-2">
+          <label className="text-xs text-slate-500 font-medium uppercase tracking-wider mb-1.5 block">Results</label>
           <select
-            className="border border-gray-300 rounded-lg px-4 py-3"
+            className="select-glass w-full"
             value={limit}
             onChange={(e) => setLimit(parseInt(e.target.value))}
           >
@@ -40,17 +43,32 @@ export default function SearchBar({
             <option value="50">50 jobs</option>
             <option value="100">100 jobs</option>
           </select>
-  
+        </div>
+
+        {/* Search Button */}
+        <div className="md:col-span-2">
           <button
             disabled={loading}
             onClick={onSearch}
-            className="bg-blue-600 hover:bg-blue-700 transition text-white font-semibold rounded-lg px-6 py-3 disabled:opacity-50"
+            className="btn-primary w-full flex items-center justify-center gap-2"
           >
-            {loading ? "Searching..." : "Search Jobs"}
+            {loading ? (
+              <>
+                <span className="loader"></span>
+                <span>Searching</span>
+              </>
+            ) : (
+              <>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <span>Search</span>
+              </>
+            )}
           </button>
-  
         </div>
       </div>
-    );
-  }
-  
+    </div>
+  );
+}
