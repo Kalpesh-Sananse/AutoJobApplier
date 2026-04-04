@@ -2,13 +2,25 @@
 import requests
 import json
 import logging
+import os
+from google import genai
 
 class AIHandler:
     def __init__(self, secrets, resume_text=""):
         self.logger = logging.getLogger("AutoJobApplier.AI")
-        self.base_url = secrets['ollama']['base_url']
-        self.model = secrets['ollama']['model']
+        # self.base_url = secrets['ollama']['base_url']
+        # self.model = secrets['ollama']['model']
         self.resume_text = resume_text
+        
+        # Gemini setup (using new google-genai SDK)
+        self.gemini_api_key = os.getenv("GEMINI_API_KEY")
+        if self.gemini_api_key:
+            self.gemini_client = genai.Client(api_key=self.gemini_api_key)
+            self.gemini_model_name = "gemini-2.5-flash"
+        else:
+            self.logger.warning("GEMINI_API_KEY environment variable not found.")
+            self.gemini_client = None
+            self.gemini_model_name = None
 
     def generate_answer(self, question, field_type="text", job_description=""):
         """
@@ -78,17 +90,30 @@ class AIHandler:
         """
 
         try:
-            response = requests.post(
-                f"{self.base_url}/api/generate",
-                json={
-                    "model": self.model,
-                    "prompt": prompt,
-                    "stream": False
-                }
+            # --- Ollama Implementation (Commented Out) ---
+            # response = requests.post(
+            #     f"{self.base_url}/api/generate",
+            #     json={
+            #         "model": self.model,
+            #         "prompt": prompt,
+            #         "stream": False
+            #     }
+            # )
+            # response.raise_for_status()
+            # result = response.json()
+            # answer = result['response'].strip()
+            # ---------------------------------------------
+            
+            # --- Gemini Implementation (google-genai SDK) ---
+            if not self.gemini_client:
+                raise Exception("Gemini client not initialized. Missing GEMINI_API_KEY")
+            
+            response = self.gemini_client.models.generate_content(
+                model=self.gemini_model_name,
+                contents=prompt
             )
-            response.raise_for_status()
-            result = response.json()
-            answer = result['response'].strip()
+            answer = response.text.strip()
+            # -------------------------------------------------
             
             # Clean up answer - remove newlines and extra whitespace
             answer = answer.replace('\n', ' ').replace('\r', ' ')
@@ -107,7 +132,7 @@ class AIHandler:
             return answer
 
         except Exception as e:
-            self.logger.error(f"Error calling Ollama: {e}")
+            self.logger.error(f"Error calling AI API (Gemini/Ollama): {e}")
             return None
     
     def _clean_numeric_answer(self, answer, question, field_type):

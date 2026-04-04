@@ -188,13 +188,14 @@ class LinkedInBotPlaywright:
             try:
                 await self.page.goto("https://www.linkedin.com/feed/", wait_until="domcontentloaded", timeout=10000)
                 await asyncio.sleep(2)
-                
-                if '/feed' in self.page.url:
-                    self.logger.info("✅ Already logged in from saved session!")
-                    await self._close_onboarding_modals()
-                    return
             except:
-                pass
+                await asyncio.sleep(1)  # Wait for any redirect to settle
+            
+            # Check URL AFTER potential redirect/exception
+            if '/feed' in self.page.url or '/jobs' in self.page.url:
+                self.logger.info("✅ Already logged in!")
+                await self._close_onboarding_modals()
+                return
             
             # Not logged in, proceed with login
             self.logger.info("🔑 Logging in...")
