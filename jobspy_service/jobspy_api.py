@@ -8,7 +8,7 @@ from concurrent.futures import ProcessPoolExecutor, TimeoutError as FuturesTimeo
 from typing import List, Optional
 from functools import partial
 
-from fastapi import FastAPI, Query, HTTPException, Body
+from fastapi import FastAPI, Query, HTTPException, Body, UploadFile, File
 from pydantic import BaseModel
 import pandas as pd
 
@@ -162,6 +162,49 @@ def save_profile(profile: dict = Body(...)):
         return {"status": "success"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/upload-resume")
+async def upload_resume(file: UploadFile = File(...)):
+    try:
+        import shutil
+        import PyPDF2
+        resume_path = os.path.join(os.path.dirname(__file__), "..", "resume.pdf")
+        text_path = os.path.join(os.path.dirname(__file__), "..", "resume.txt")
+        
+        with open(resume_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+            
+        # Parse PDF to text automatically for the Agent's context
+        text_content = ""
+        with open(resume_path, "rb") as pdf_file:
+            reader = PyPDF2.PdfReader(pdf_file)
+            for page_num in range(len(reader.pages)):
+                text_content += reader.pages[page_num].extract_text() + "\n"
+                
+        # Save parsed text securely for Ollama LLM queries
+        with open(text_path, "w") as text_file:
+            text_file.write(text_content.strip())
+            
+        return {"status": "success", "filename": file.filename, "parsed": True}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+class ApplyRequest(BaseModel):
+    job_url: str
+    job_title: str
+    company: str
+
+@app.post("/apply")
+async def apply_job(req: ApplyRequest):
+    import subprocess
+    print(f"Triggering AutoJobAgent for {req.company} at {req.job_url}")
+    
+    # Executing the backend Python Playwright script
+    try:
+        subprocess.Popen(["python3", "agent/main_playwright.py", req.job_url])
+        return {"status": "initiated", "message": "Playwright agent launched successfully"}
+    except Exception as e:
+        return {"status": "failed", "message": str(e)}
 
 
 @app.get("/jobs")

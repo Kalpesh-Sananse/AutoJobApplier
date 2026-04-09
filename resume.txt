@@ -1,22 +1,47 @@
-
-Alex Danny
-Software Engineer
-Email: alexdanny006@gmail.com
-
-Summary:
-Experienced Software Engineer with 5 years of experience in Python, JavaScript, and Web Development. Skilled in building scalable applications and automating workflows.
-
-Skills:
-- Languages: Python, JavaScript, TypeScript, HTML, CSS, SQL
-- Frameworks: React, Node.js, Django, Flask, Selenium
-- Tools: Git, Docker, Kubernetes, AWS, Jenkins
-- AI: OpenAI API, Ollama, LLMs
-
-Experience:
-Software Engineer | Tech Corp | 2020 - Present
-- Developed and maintained web applications using React and Node.js.
-- Implemented automated testing pipelines using Selenium and PyTest.
-- Integrated AI features using LLMs to improve user engagement.
-
-Education:
-Bachelor of Science in Computer Science | University of Tech | 2016 - 2020
+Kalpesh Sananse
+Pune, Maharashtra
+/ne+91-8767932356 sanansekalpesh9@gmail.com /g♀bePortfolio Linkedin /gtbGithub
+EDUCATION
+G H Raisoni College of Engineering and Managment Pune. 2023 - 2026
+BTECH - Information Technology CGPA -8.45 (Pursuing) Pune,Maharashtra
+Government Polytechnic, Jalgaon. 2020 - 2023
+Diploma in Information Technology - Percentage -86.25% Jalgaon, Maharashtra
+EXPERIENCE
+2M Software Solution August 2024 - Present
+Jr Software Devloper Intern Banglore, India(Remote)
+•Developed and tested interactive web applications using JavaScript and PHP.
+•Collaborated with development teams to identify and resolve bugs, ensuring high-quality software delivery.
+•Performed manual testing and created unit tests to validate application functionality.
+•Used GitHub for version control and Jira for tracking defects and project progress.
+Neat Roots June 2024 - November 2024
+Android Developer Intern Mastic, New York (Remote)
+•Developed mobile applications and performed manual testing to ensure the functionality of apps across
+different devices.
+•Automated testing for Android applications using tools like Selenium.
+•Implemented secure user authentication using Firebase and conducted testing to ensure data integrity.
+TECHNICAL SKILLS
+•Languages: Java,C, C++, Kotlin, Python, JavaScript, PHP
+•Tools: Github, Git, Firebase, GitLab.
+•Technologies/Frameworks: Android Devlopment, Jetpack Compose, Flutter, Bootstrap.
+•Testing: Manual Testing, Automated Testing, Unit Testing (JUnit, Selenium), Bug Tracking (Jira, Bugzilla),
+SQL Queries, Test Case Design, Regression Testing .
+•Concept: Object-Oriented Programming(OOP’s),Data Structues and Algorithms, DBMS, Operating System,
+Computer Network, Software Testing Methodologies (Agile, Waterfall),Machine Learning.
+SELECTED PROJECTS
+Rakshak (Women Safety) |Android Studio, Kotlin, XML, Firebase, IBM cloud Jan- Present 2025
+•Integrated voice recognition for emergency SOS alerts and real-time location sharing to emergency contacts.
+•Conducted manual and automated testing to ensure app reliability and performance across multiple devices.
+•Worked closely with developers to identify and fix bugs, ensuring the app met all functional requirements.
+•Implemented unit tests and regression tests for new features.
+DPSI Forensic |Android Studio, Kotlin, XML, Firebase Mar-Apr 2024
+•Developed an e-learning platform with over 1,000 active users, focusing on secure user authentication and data
+storage.
+•Performed manual testing of user interfaces and ensured that all features were working as expected.
+•Automated testing to validate the functionality of new features and enhance app performance.
+ACHIEVEMENTS
+•Winner in IBM SkillsBuild Maharashtra State Level Hackathon (72+ Teams, 45+ Colleges). 
+•1stWinner in State’s largest Hackathon at COEP Technological Univestiy Pune (240+ teams). 
+•1stWinner in Silicon Fusion Hackathon organized by the AISSMS COE Pune. 
+•3rdWinner in VCET Hackathon Mumbai (225+ teams). 
+•1stWinner in Hast It out Hackathon organized by DY Patil COE Pimpari Pune. 
+•1stWinner in Shield Project Competition organized by Government Polytechnic Jalgaon.

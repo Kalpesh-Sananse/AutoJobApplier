@@ -269,6 +269,31 @@ class LinkedInBotPlaywright:
         await self.page.goto(url, wait_until="domcontentloaded")
         await asyncio.sleep(3)
 
+    async def apply_to_single_job(self, url):
+        """Navigate directly to a specific job and apply (Used by UI Dashboard)."""
+        self.logger.info(f"🎯 Navigating directly to target job: {url}")
+        await self.page.goto(url, wait_until="domcontentloaded")
+        await asyncio.sleep(4)
+        
+        easy_apply_btn = await self.page.query_selector('button.jobs-apply-button')
+        if easy_apply_btn:
+            btn_text = await easy_apply_btn.inner_text()
+            if "Easy Apply" in btn_text:
+                self.logger.info("📝 Easy Apply button found. Starting application...")
+                await easy_apply_btn.click()
+                await asyncio.sleep(2)
+                
+                success = await self._handle_application_modal(job_index=1)
+                if success:
+                    self.stats['applications_submitted'] += 1
+                    self.logger.info("✅ Targeted Application submitted successfully!")
+                else:
+                    self.stats['applications_failed'] += 1
+            else:
+                self.logger.info("⏭️ External application link required (Not Easy Apply). Aborting single targeted job.")
+        else:
+            self.logger.warning("⚠️ No Easy Apply button found on this specific job UI. It may have expired or you already applied.")
+
     async def apply_to_jobs(self):
         """Main loop for finding and applying to jobs - PRODUCTION VERSION."""
         applied_count = 0

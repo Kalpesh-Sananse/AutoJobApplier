@@ -15,8 +15,24 @@ export default function JobDetails({ job }) {
       );
     }
 
-    const startAutomation = () => {
+    const API_BASE = "http://127.0.0.1:8000";
+
+    const startAutomation = async () => {
         setApplyState(1);
+        try {
+            await fetch(`${API_BASE}/apply`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    job_url: job.job_url || "https://linkedin.com",
+                    job_title: job.title || "Unknown",
+                    company: job.company || "Unknown"
+                })
+            });
+        } catch (e) {
+            console.error("Failed to trigger agent", e);
+        }
+        
         setTimeout(() => setApplyState(2), 2000);
         setTimeout(() => setApplyState(3), 4500);
         setTimeout(() => setApplyState(0), 10000); // reset preview later

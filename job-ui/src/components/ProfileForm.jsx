@@ -24,6 +24,26 @@ export default function ProfileForm() {
   const handleChange = (e) => setProfile({ ...profile, [e.target.name]: e.target.value });
   const handlePrefChange = (e) => setPreferences({ ...preferences, [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value });
 
+  const handleFileUpload = async (file) => {
+    setResumeFile(file);
+    const formData = new FormData();
+    formData.append("file", file);
+    
+    setStatus("Uploading Resume...");
+    try {
+        const response = await fetch(`${API_BASE}/upload-resume`, {
+            method: "POST",
+            body: formData,
+        });
+        if (response.ok) {
+            setStatus("Resume Uploaded Successfully! ✅");
+        }
+    } catch (err) {
+        setStatus("Resume upload failed.");
+    }
+    setTimeout(() => setStatus(""), 3000);
+  };
+
   const handleSave = async (e) => {
     e.preventDefault();
     setStatus("Saving...");
@@ -43,15 +63,25 @@ export default function ProfileForm() {
           {/* Resume Upload Box */}
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
             <h3 className="text-lg font-bold text-gray-900 mb-4">Resume Upload</h3>
-            <div className="border-2 border-dashed border-indigo-200 bg-indigo-50/50 rounded-xl p-8 text-center hover:bg-indigo-50 transition-colors cursor-pointer group flex flex-col items-center justify-center">
+            <div 
+              className="border-2 border-dashed border-indigo-200 bg-indigo-50/50 rounded-xl p-8 text-center hover:bg-indigo-50 transition-colors cursor-pointer group flex flex-col items-center justify-center"
+              onClick={() => document.getElementById('resumeUploadInput').click()}
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={(e) => {
+                  e.preventDefault();
+                  if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                      handleFileUpload(e.dataTransfer.files[0]);
+                  }
+              }}
+            >
               <svg className="w-12 h-12 text-indigo-400 group-hover:text-indigo-600 transition-colors mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
               </svg>
               <p className="text-sm font-semibold text-indigo-900">Click to upload or drag & drop</p>
-              <p className="text-xs text-indigo-500 mt-1">PDF, DOCX up to 10MB</p>
+              <p className="text-xs text-indigo-500 mt-1">PDF up to 10MB</p>
               {resumeFile && <div className="mt-4 px-3 py-1 bg-white text-indigo-700 rounded-full text-xs font-bold shadow-sm border border-indigo-100 flex items-center gap-2">📄 {resumeFile.name}</div>}
             </div>
-            <input type="file" className="hidden" onChange={(e) => setResumeFile(e.target.files[0])} />
+            <input id="resumeUploadInput" type="file" className="hidden" accept=".pdf" onChange={(e) => handleFileUpload(e.target.files[0])} />
           </div>
 
           {/* Preferences Config */}

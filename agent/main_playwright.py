@@ -89,8 +89,14 @@ async def main():
         await bot.login()
         await browser.save_session()  # Save session after successful login
         
-        await bot.search_jobs()
-        await bot.apply_to_jobs()
+        target_url = sys.argv[1] if len(sys.argv) > 1 else None
+        
+        if target_url and target_url.startswith("http"):
+            logger.info(f"🔗 Targeted URL Mode Activated: {target_url}")
+            await bot.apply_to_single_job(target_url)
+        else:
+            await bot.search_jobs()
+            await bot.apply_to_jobs()
         
     except Exception as e:
         logger.error(f"An unexpected error occurred: {e}")
