@@ -478,9 +478,11 @@ class LinkedInBotPlaywright:
                     
                     await self._close_modal()
                     self.current_job_screenshots = []  # Reset for next job
+                    self.field_errors = {} # Reset errors
                     return False
             else:
                 consecutive_errors = 0  # Reset on success
+
             
             # Look for NEXT button
             next_btn = await modal.query_selector('button[aria-label*="Continue to next step"]')
@@ -577,14 +579,20 @@ class LinkedInBotPlaywright:
                     self.logger.info(f"  ⏭️  Skipped: '{label[:50]}' (non-application field)")
                     continue
                 
-                # Skip if already filled properly
+                # Log what LinkedIn autofilled, but NEVER skip. We want the AI to strictly override.
                 if current_value and len(current_value.strip()) > 0 and len(current_value) < 100:
-                    self.logger.info(f"  ✓ '{label[:40]}': '{current_value[:30]}'")
-                    continue
+                    self.logger.info(f"  ✓ LinkedIn Autofilled (waiting for AI to verify/override): '{label[:40]}' = '{current_value[:30]}'")
                 
                 # Get answer with retry logic
-                field_type = self._determine_field_type(inp, label)
-                answer = await self._get_answer_with_retry(label, field_type)
+                input_type = await inp.get_attribute('type')
+                field_type = self._determine_field_type(inp, label, input_type)
+                
+                # Retrieve any tracked error context for this field to re-feed directly to the AI
+                field_id = await inp.get_attribute('id') or label
+                if not hasattr(self, 'field_errors'): self.field_errors = {}
+                error_ctx = self.field_errors.get(field_id, "")
+                
+                answer = await self._get_answer_with_retry(label, field_type, error_ctx)
                 
                 if answer:
                     try:
@@ -743,8 +751,7 @@ class LinkedInBotPlaywright:
                 label = await self._get_field_label(select)
                 
                 if current_value and current_value != '' and current_value.lower() not in ['select', 'select an option']:
-                    self.logger.info(f"  ✓ Dropdown '{label[:40]}': selected")
-                    continue
+                    self.logger.info(f"  ✓ Dropdown Autofilled (waiting for AI): '{label[:40]}'")
                 
                 options_elements = await select.query_selector_all('option')
                 options = []
@@ -771,11 +778,11 @@ class LinkedInBotPlaywright:
         
         self.logger.info(f"📊 Filled {filled_count} text fields this pass")
 
-    async def _get_answer_with_retry(self, question, field_type):
+    async def _get_answer_with_retry(self, question, field_type, error_context=""):
         """Get answer with retry logic - PRODUCTION FEATURE."""
         for attempt in range(self.MAX_RETRIES):
             try:
-                answer = self._get_answer(question, field_type)
+                answer = self._get_answer(question, field_type, error_context)
                 if answer and len(answer.strip()) > 0:
                     return answer
             except Exception as e:
@@ -794,10 +801,23 @@ class LinkedInBotPlaywright:
         try:
             error_els = await modal.query_selector_all('.artdeco-inline-feedback--error')
             if error_els and len(error_els) > 0:
+                if not hasattr(self, 'field_errors'): self.field_errors = {}
                 for error_el in error_els:
                     try:
                         error_text = await error_el.inner_text()
-                        self.logger.error(f"⚠️  Form error: {error_text}")
+                        if error_text:
+                            self.logger.error(f"⚠️  Form error: {error_text.strip()}")
+                            # Attempt to clear the field that triggered the error so the AI can correct it on next tick
+                            parent = await error_el.evaluate_handle('el => el.closest(".fb-dash-form-element")')
+                            if parent:
+                                inp = await parent.query_selector('input, textarea, select')
+                                if inp:
+                                    # Register error context directly to AI logic handler
+                                    label = await self._get_field_label(inp)
+                                    field_id = await inp.get_attribute('id') or label
+                                    self.field_errors[field_id] = error_text.strip()
+                                    await inp.evaluate('el => { if(el.type === "checkbox" || el.type === "radio") { el.checked = false; } else { el.value = ""; } }')
+                                    self.logger.info("  🧹 Cleared errored field to force retry with AI correction.")
                     except:
                         pass
                 return True
@@ -808,6 +828,27 @@ class LinkedInBotPlaywright:
     async def _get_field_label(self, element):
         """Get label for a field with multiple fallbacks."""
         try:
+            # Try to grab the broader question context first (especially for Checkboxes inside FieldSets)
+            context = await element.evaluate('''
+                el => {
+                    let container = el.closest('.fb-dash-form-element') || el.closest('.jobs-easy-apply-form-section__grouping') || el.closest('fieldset');
+                    if (container) {
+                        let heading = container.querySelector('legend span.visually-hidden, legend, .fb-dash-form-element__label span[aria-hidden="true"], label.fb-dash-form-element__label');
+                        if (heading && heading.textContent.trim().length > 5) {
+                             let parent = el.closest('label');
+                             let parentText = parent ? parent.textContent.trim() : "";
+                             if (el.type === 'checkbox' || el.type === 'radio') {
+                                 return heading.textContent.trim() + " (" + parentText + ")";
+                             }
+                             return heading.textContent.trim();
+                        }
+                    }
+                    return null;
+                }
+            ''')
+            if context:
+                return context.strip()
+
             # Try aria-label first
             aria_label = await element.get_attribute('aria-label')
             if aria_label:
@@ -840,16 +881,18 @@ class LinkedInBotPlaywright:
             pass
         return "Unknown"
 
-    def _determine_field_type(self, element, label):
+    def _determine_field_type(self, element, label, input_type=None):
         """Determine field type for AI - PRODUCTION VERSION."""
         label_lower = label.lower()
         
+        if input_type in ['number', 'tel']:
+            return 'numeric'
+            
         # Numeric fields
-        if any(kw in label_lower for kw in ['phone', 'mobile', 'salary', 'compensation']):
+        numeric_keywords = ['phone', 'mobile', 'salary', 'compensation', 'how many', 'expected base']
+        if any(kw in label_lower for kw in numeric_keywords):
             return 'numeric'
-        if 'year' in label_lower and 'experience' in label_lower:
-            return 'numeric'
-        if 'how many' in label_lower:
+        if 'year' in label_lower and ('experience' in label_lower or 'in years' in label_lower):
             return 'numeric'
         
         # Boolean fields
@@ -858,10 +901,10 @@ class LinkedInBotPlaywright:
         
         return 'text'
 
-    def _get_answer(self, question, field_type):
+    def _get_answer(self, question, field_type, error_context=""):
         """Get answer from AI - PRODUCTION VERSION."""
         try:
-            answer = self.ai_handler.generate_answer(question, field_type=field_type)
+            answer = self.ai_handler.generate_answer(question, field_type=field_type, error_context=error_context)
             if answer and len(answer.strip()) > 0:
                 return answer
         except Exception as e:

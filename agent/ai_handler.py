@@ -13,7 +13,7 @@ class AIHandler:
         self.resume_text = resume_text
         
         # Gemini setup (using new google-genai SDK)
-        self.gemini_api_key = os.getenv("GEMINI_API_KEY")
+        self.gemini_api_key = os.getenv("GEMINI_API_KEY") or secrets.get("gemini_api_key")
         if self.gemini_api_key:
             self.gemini_client = genai.Client(api_key=self.gemini_api_key)
             self.gemini_model_name = "gemini-2.5-flash"
@@ -22,9 +22,10 @@ class AIHandler:
             self.gemini_client = None
             self.gemini_model_name = None
 
-    def generate_answer(self, question, field_type="text", job_description=""):
+    def generate_answer(self, question, field_type="text", job_description="", error_context=""):
         """
-        Generates an answer to a specific question using Ollama.
+        Generates an answer to a specific question using Ollama/Gemini.
+
         """
         
         # Extract specific information from resume for common fields
@@ -70,22 +71,24 @@ class AIHandler:
             rule = "Output ONLY 'Yes' or 'No'."
         
         prompt = f"""
-        You are an assistant filling out a job application.
+        You are an exact assistant securely filling out a job application.
         
-        My Info:
-        {self.resume_text[:2000]}
+        CANDIDATE INFO & CUSTOM INSTRUCTIONS:
+        {self.resume_text[:4000]}
         
         The Question: "{question}"
         Field Type: {field_type}
         
         Instructions:
-        - Answer based ONLY on the resume information above.
+        - First, check if the exact answer is in the CANDIDATE INFO or "Custom Answers". If so, use it.
+        - If the information is NOT explicitly provided, use your best professional LLM logic to make a highly plausible, standard guess (e.g., standard answers like "Yes" to authorization, "No" to sponsorship).
+        - NEVER say "I don't have this information". You MUST provide a direct, logical answer to fill the form.
         - {rule}
         - If asked for phone/mobile, output ONLY digits (e.g., 5551234567).
         - If asked for city, output ONLY the city name.
         - If asked for years of experience, output ONLY the number.
         - Keep it purely the answer value, nothing else.
-        
+        {f"- CRITICAL FIX REQUIRED. We just tried an answer, but the form returned this ERROR: '{error_context}'. CHANGE YOUR ANSWER to fix this error!" if error_context else ""}
         Answer:
         """
 
@@ -112,6 +115,10 @@ class AIHandler:
                 model=self.gemini_model_name,
                 contents=prompt
             )
+            if not response or not response.text:
+                self.logger.error("Gemini returned an empty or blocked response.")
+                return None
+                
             answer = response.text.strip()
             # -------------------------------------------------
             

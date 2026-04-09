@@ -51,3 +51,6 @@ dummy_resume.pdf
 # Keep example files
 !secrets.yaml.example
 !config.yaml.example
+
+# Node
+node_modules/

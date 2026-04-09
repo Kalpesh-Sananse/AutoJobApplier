@@ -50,6 +50,31 @@ async def main():
         logger.warning(f"Could not read resume file: {e}. AI will work with limited context.")
         resume_text = ""
 
+    # Inject User Profile Built from the Frontend UI
+    try:
+        import os, json
+        profile_path = "user_profile.json"
+        # Since this script runs from root or agent, safely check both
+        if not os.path.exists(profile_path):
+            profile_path = os.path.join("..", "user_profile.json")
+            
+        if os.path.exists(profile_path):
+            with open(profile_path, "r") as f:
+                profile_data = json.load(f)
+            
+            # Format nicely
+            formatted_profile = "=== CANDIDATE PROFILE (PRIMARY SOURCE OF TRUTH) ===\n"
+            for k, v in profile_data.items():
+                if v and str(v).strip():
+                    formatted_profile += f"{k.upper()}:\n{v}\n\n"
+            
+            resume_text = formatted_profile + "=== ORIGINAL RESUME ===\n" + resume_text
+            logger.info("Successfully loaded User Profile context into the AI.")
+        else:
+            logger.info("No user_profile.json found. Relying solely on resume context.")
+    except Exception as e:
+        logger.warning(f"Failed to load user profile: {e}")
+
     ai_handler = AIHandler(secrets, resume_text)
 
     # Initialize Browser

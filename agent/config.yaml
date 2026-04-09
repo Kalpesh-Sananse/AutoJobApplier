@@ -13,7 +13,7 @@ limit:
 
 # Screenshot settings for debugging and memory optimization
 screenshots:
-  enabled: true              # Set to false to disable all screenshots
+  enabled: false             # Set to false to disable all screenshots
   save_on_success: false     # Don't save screenshots for successful applications
   save_on_error: true        # Always save screenshots when errors occur
   save_final_only: true      # Only save screenshot at submit
