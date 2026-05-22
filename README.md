@@ -21,7 +21,6 @@
 A **production-ready, intelligent AI agent** that automates LinkedIn job applications with **100% success rate** in testing. Built with Playwright for browser automation and Ollama for AI-powered form filling.
 
 ### Key Achievements
-- ✅ **4-7 applications** submitted automatically per test run
 - ✅ **100% success rate** - zero failed applications
 - ✅ **90% memory optimization** - intelligent screenshot management
 - ✅ **Smart numeric parsing** - handles "3.5/4.0" → "3.5" automatically
